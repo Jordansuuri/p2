@@ -8,3 +8,5 @@ response = requests.get(url)
 if response.ok:
     soup = BeautifulSoup(response.text)
     print(soup)
+
+print("coucou")
