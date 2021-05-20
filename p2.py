@@ -2,6 +2,16 @@ from bs4 import BeautifulSoup
 import requests
 import lxml
 
+# reminder des variables demandées:
+# title
+# universal_product_code
+# price_including_tax
+# price_excluding_tax
+# number_available
+# product_description
+# category
+# review_rating
+
 # Créer une variable où on rentre l'url qui va nous servir à l'inclure dans la fonction request #
 
 url = 'http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html'
@@ -11,14 +21,28 @@ response = requests.get(url)
 
 # Boucle if : si la reponse est bien 200, on peut demander les informations #
 if response.ok:
-    # recupération du contenu de l'url en brut #
+# recupération du contenu de l'url en brut #
     content = response.content
-    # Variable parser qui utiliser BS #
+# Variable parser qui utiliser BS #
     parser = BeautifulSoup(content, "lxml")
+# Récupération des td #
+    td_informations = parser.find_all("td")
+# universal_product_code
+    universal_product_code = td_informations[0].text
+ # product_description
+    product_description = td_informations[1].text
+# price_including_tax
+    price_including_tax = td_informations[2].text
+
+    print(td_informations)
+
     # recuperer le titre du livre et le met dans une liste via find_all#
     titre_balise = parser.find_all("h1")
-    titre_livre = titre_balise[0].text
-    # Titre recupéré en text
-    print(titre_livre)
+    # title
+    title = titre_balise[0].text
 
 
+    # Recuperer le prix via une classe #
+
+    #book_price =
+    #class="price_color"#
