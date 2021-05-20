@@ -29,20 +29,30 @@ if response.ok:
     td_informations = parser.find_all("td")
 # universal_product_code
     universal_product_code = td_informations[0].text
- # product_description
+# product_description
     product_description = td_informations[1].text
 # price_including_tax
     price_including_tax = td_informations[2].text
+# price_excluding_tax
+    price_excluding_tax = td_informations[3].text
+# number_available
+    number_available = td_informations[5].text
+# review_rating
+    review_rating = td_informations[6].text
+# recuperer le titre du livre et le met dans une liste via find_all#
+    titre_balise = parser.find_all("h1")
+# title
+    title = titre_balise[0].text
+# review_rating
 
     print(td_informations)
+    print(universal_product_code)
+    print(title)
+    print(product_description)
+    print(price_including_tax)
+    print(price_excluding_tax)
+    print(number_available)
+    print(review_rating)
 
-    # recuperer le titre du livre et le met dans une liste via find_all#
-    titre_balise = parser.find_all("h1")
-    # title
-    title = titre_balise[0].text
 
 
-    # Recuperer le prix via une classe #
-
-    #book_price =
-    #class="price_color"#
