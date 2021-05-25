@@ -18,7 +18,7 @@ import lxml
 
 # Créer une variable où on rentre l'url qui va nous servir à l'inclure dans la fonction request #
 
-url = 'http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html'
+url = 'http://books.toscrape.com/catalogue/quarter-life-poetry-poems-for-the-young-broke-and-hangry_727/index.html'
 
 # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
 response = requests.get(url)
@@ -48,9 +48,11 @@ if response.ok:
 # title
     title = titre_balise[0].text
 # Category
-   # category_balise = parser.find_all(class_="breadcrumb")
-  #  category = category_balise
- #   print(category_balise)
+    category_balise = parser.find(class_="breadcrumb")
+    category_balise = category_balise.text.split('\n')
+    category = category_balise[-4]
+    print(category)
+
 
 
 info = []
@@ -64,8 +66,7 @@ info.append(price_including_tax)
 info.append(price_excluding_tax)
 info.append(number_available)
 info.append(review_rating)
-#info.append(category)
+info.append(category)
 ligne_csv = ";".join(info)
 
 print(info)
-print(ligne_csv)
