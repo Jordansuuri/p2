@@ -18,7 +18,7 @@ import lxml
 
 # Créer une variable où on rentre l'url qui va nous servir à l'inclure dans la fonction request #
 
-url = 'http://books.toscrape.com/catalogue/quarter-life-poetry-poems-for-the-young-broke-and-hangry_727/index.html'
+url = 'http://books.toscrape.com/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html'
 
 # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
 response = requests.get(url)
@@ -28,13 +28,16 @@ if response.ok:
 # recupération du contenu de l'url en brut #
     content = response.content
 # Variable parser qui utiliser BS #
-    parser = BeautifulSoup(content, "lxml")
+    soup = BeautifulSoup(content, "html.parser")
 # Récupération des td #
-    td_informations = parser.find_all("td")
+    td_informations = soup.find_all("td")
 # universal_product_code
     universal_product_code = td_informations[0].text
-# product_description #A CHANGER
-    product_description = td_informations[1].text
+# product_description
+    product_description = soup.find_all('p')
+    product_description = product_description[3].text
+
+
 # price_excluding_tax
     price_excluding_tax = td_informations[2].text.replace('£','')
 # price_including_tax
@@ -44,14 +47,16 @@ if response.ok:
 # review_rating
     review_rating = td_informations[6].text
 # recuperer le titre du livre et le met dans une liste via find_all#
-    titre_balise = parser.find_all("h1")
+    titre_balise = soup.find_all("h1")
 # title
     title = titre_balise[0].text
 # Category
-    category_balise = parser.find(class_="breadcrumb")
+    category_balise = soup.find(class_="breadcrumb")
     category_balise = category_balise.text.split('\n')
     category = category_balise[-4]
-    print(category)
+#image_url, recupéra via la balise img, puis chercher dans le dictionnaire rsc
+    img_balise = soup.find('img')
+    image_url = img_balise['src'].replace('../..','http://books.toscrape.com')
 
 
 
@@ -67,6 +72,12 @@ info.append(price_excluding_tax)
 info.append(number_available)
 info.append(review_rating)
 info.append(category)
-ligne_csv = ";".join(info)
+info.append(image_url)
+
+# product_page_url
 
 print(info)
+
+#ajout separateur ; dans le csv
+ligne_csv = ";".join(info)
+
