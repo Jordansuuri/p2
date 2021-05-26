@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
-import lxml
+import csv
 
 # reminder des variables demandées (dans l'ordre):
-
 
 # product_page_url
 # universal_product_code
@@ -58,26 +57,45 @@ if response.ok:
     img_balise = soup.find('img')
     image_url = img_balise['src'].replace('../..','http://books.toscrape.com')
 
-
-
+# Ajoute les variable vers la liste info #
 info = []
-
-# Ajoute les variable la liste info #
-
 info.append(universal_product_code)
 info.append(title)
-info.append(product_description)
 info.append(price_including_tax)
 info.append(price_excluding_tax)
 info.append(number_available)
+info.append(product_description)
 info.append(review_rating)
 info.append(category)
 info.append(image_url)
 
-# product_page_url
 
-print(info)
-
-#ajout separateur ; dans le csv
+# ajout separateur ; dans le tableau info
 ligne_csv = ";".join(info)
+
+#On definit les differentes categories dans le csv & on ecris les differentes variables dans le csv
+
+
+with open('info_site.csv', "w+") as file:
+    file.write("universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
+    file.write(universal_product_code + ';')
+    file.write(title + ';')
+    file.write(price_including_tax+ ';')
+    file.write(price_excluding_tax+ ';')
+    file.write(number_available+ ';')
+    file.write(product_description + ';')
+    file.write(category+ ';')
+    file.write(review_rating+ ';')
+    file.write(image_url+ ';')
+
+
+# Manque toujours : product_page_url
+
+
+
+
+
+
+
+
 
