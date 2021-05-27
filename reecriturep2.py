@@ -1,36 +1,24 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
+import time
 
-# reminder des variables demandées (dans l'ordre):
 
-# product_page_url
-# universal_product_code
-# title
-# price_including_tax
-# price_excluding_tax
-# number_available
-# product_description
-# category
-# review_rating
-# image_url
+url_category = 'http://books.toscrape.com/catalogue/category/books/travel_2/index.html'
+response = requests.get(url_category)
 
-# Créer une variable où on rentre l'url qui va nous servir à l'inclure dans la fonction request #
-def page_scrap():
-    url = 'http://books.toscrape.com/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html'
-
-    # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
+content = response.content
+soup = BeautifulSoup(content, "html.parser")
+def page_scrap(url_product):
+    url = url_product
+     # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
     response = requests.get(url)
-
-
     # Boucle if : si la reponse est bien 200, on peut demander les informations #
     if response.ok:
     # recupération du contenu de l'url en brut #
         content = response.content
     # Variable parser qui utiliser BS #
         soup = BeautifulSoup(content, "html.parser")
-
-
     # Récupération des td #
         td_informations = soup.find_all("td")
     # universal_product_code
@@ -68,12 +56,10 @@ def page_scrap():
     info.append(category)
     info.append(image_url)
 
-    print(info)
     # ajout separateur ; dans le tableau info
     ligne_csv = ";".join(info)
 
     #On definit les differentes categories dans le csv & on ecris les differentes variables dans le csv
-
 
     with open('info_site.csv', "w+") as file:
         file.write("universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
@@ -85,8 +71,22 @@ def page_scrap():
         file.write(product_description + ';')
         file.write(category+ ';')
         file.write(review_rating+ ';')
-        file.write(image_url+ ';')
+        file.write(image_url+ ';\n')
 
 
-    # Manque toujours : product_page_url
-page_scrap()
+url_len = len(soup.select("h3"))
+url_page = []
+indice_livre = 0
+for loop in range(url_len):
+    url_len = len(soup.select("h3"))
+    url_product_h3 = soup.select("h3")
+    url_product_href = url_product_h3[indice_livre].find("a")
+    url_product = url_product_href['href'].replace('../../..','http://books.toscrape.com/catalogue')
+    url_page.append(url_product)
+    indice_livre += 1
+    print("voici les pages ajoutés : " + url_product)
+    page_scrap(url_product)
+
+
+
+
