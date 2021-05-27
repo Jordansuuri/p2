@@ -17,7 +17,7 @@ import csv
 
 # Créer une variable où on rentre l'url qui va nous servir à l'inclure dans la fonction request #
 def page_scrap():
-    url = 'http://books.toscrape.com/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html'
+    url = 'http://books.toscrape.com/catalogue/1000-places-to-see-before-you-die_1/index.html'
 
     # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
     response = requests.get(url)
@@ -36,7 +36,7 @@ def page_scrap():
     # universal_product_code
         universal_product_code = td_informations[0].text
     # product_description
-        product_description = soup.find_all('p')[3].text
+        product_description = soup.find_all('p')[3].text.replace(';',',')
     # price_excluding_tax
         price_excluding_tax = td_informations[2].text.replace('£','')
     # price_including_tax

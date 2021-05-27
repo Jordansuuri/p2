@@ -4,8 +4,11 @@ import csv
 import time
 
 
-url_category = 'http://books.toscrape.com/catalogue/category/books/travel_2/index.html'
+url_category = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
 response = requests.get(url_category)
+
+with open('info_site.csv', "a+") as file:
+    file.write("universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
 
 content = response.content
 soup = BeautifulSoup(content, "html.parser")
@@ -24,7 +27,7 @@ def page_scrap(url_product):
     # universal_product_code
         universal_product_code = td_informations[0].text
     # product_description
-        product_description = soup.find_all('p')[3].text
+        product_description = soup.find_all('p')[3].text.replace(';',',')
     # price_excluding_tax
         price_excluding_tax = td_informations[2].text.replace('£','')
     # price_including_tax
@@ -61,8 +64,7 @@ def page_scrap(url_product):
 
     #On definit les differentes categories dans le csv & on ecris les differentes variables dans le csv
 
-    with open('info_site.csv', "w+") as file:
-        file.write("universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
+    with open('info_site.csv', "a+") as file:
         file.write(universal_product_code + ';')
         file.write(title + ';')
         file.write(price_including_tax+ ';')
