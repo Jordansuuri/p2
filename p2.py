@@ -35,8 +35,6 @@ if response.ok:
 # product_description
     product_description = soup.find_all('p')
     product_description = product_description[3].text
-
-
 # price_excluding_tax
     price_excluding_tax = td_informations[2].text.replace('£','')
 # price_including_tax
