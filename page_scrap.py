@@ -13,8 +13,8 @@ soup = BeautifulSoup(content, "html.parser")
 with open('info_site.csv', "w") as file:
     file.write("universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
 
-def page_scrap(product_page_url):
-    url = product_page_url
+def page_scrap(url_product):
+    url = url_product
      # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
     response = requests.get(url)
     # Boucle if : si la reponse est bien 200, on peut demander les informations #
@@ -58,54 +58,3 @@ def page_scrap(product_page_url):
         file.write(review_rating + ';')
         file.write(image_url + ';\n')
         file.close
-
-
-def info_add():
-    # Ajoute les variable vers la liste info #
-    info = []
-    info.append(universal_product_code)
-    info.append(title)
-    info.append(price_including_tax)
-    info.append(price_excluding_tax)
-    info.append(number_available)
-    info.append(product_description)
-    info.append(review_rating)
-    info.append(category)
-    info.append(image_url)
-
-
-# création d'une condition si le bouton next existe : on créer une nouvelle url (next_url)
-next_exist = soup.find_all(class_="next")
-url_len = len(soup.select("h3"))
-url_page = []
-indice_livre = 0
-
-
-
-for loop in range(url_len):
-    url_product_h3 = soup.select("h3")
-    url_product_href = url_product_h3[indice_livre].find("a")
-    product_page_url = url_product_href['href'].replace('../../..','http://books.toscrape.com/catalogue')
-    url_page.append(product_page_url)
-    indice_livre += 1
-    page_scrap(product_page_url)
-    print("voici les pages ajoutés : " + product_page_url)
-
-
-if len(next_exist) > 0:
-    next_balise = str(next_exist[0]).split('">')
-    next_split = next_balise[1].split('"')
-    next_url = next_split[1]
-    next_balise = url_category.split('/')
-    next_balise[-1] = next_url
-    next_url = '/'.join(next_balise)
-    url_category = next_url
-    print(url_category)
-    page_scrap(product_page_url)
-
-
-
-
-
-
-

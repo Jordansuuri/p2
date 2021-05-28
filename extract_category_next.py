@@ -4,14 +4,15 @@ import csv
 from time import time
 
 
-url_category = 'http://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html'
+# CHANGER LE NOM DU FICHIER CSV PAR LE NOM DE LA CATEGORIE => with open (nom_variable_category, 'w')
+def mk_csv():
+    with open('info_site.csv', "w") as file:
+        file.write("product_page_url;universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
+
+url_category = 'http://books.toscrape.com/catalogue/category/books/childrens_11/index.html'
 response = requests.get(url_category)
 content = response.content
 soup = BeautifulSoup(content, "html.parser")
-
-# CHANGER LE NOM DU FICHIER CSV PAR LE NOM DE LA CATEGORIE => with open (nom_variable_category, 'w')
-with open('info_site.csv', "w") as file:
-    file.write("universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
 
 def page_scrap(product_page_url):
     url = product_page_url
@@ -48,6 +49,7 @@ def page_scrap(product_page_url):
         image_url = img_balise['src'].replace('../..','http://books.toscrape.com')
     # On definit les differentes categories dans le csv & on ecris les differentes variables dans le csv
     with open('info_site.csv', "a+") as file:
+        file.write(product_page_url + ';')
         file.write(universal_product_code + ';')
         file.write(title + ';')
         file.write(price_including_tax + ';')
@@ -60,26 +62,12 @@ def page_scrap(product_page_url):
         file.close
 
 
-def info_add():
-    # Ajoute les variable vers la liste info #
-    info = []
-    info.append(universal_product_code)
-    info.append(title)
-    info.append(price_including_tax)
-    info.append(price_excluding_tax)
-    info.append(number_available)
-    info.append(product_description)
-    info.append(review_rating)
-    info.append(category)
-    info.append(image_url)
-
 
 # création d'une condition si le bouton next existe : on créer une nouvelle url (next_url)
 next_exist = soup.find_all(class_="next")
 url_len = len(soup.select("h3"))
 url_page = []
 indice_livre = 0
-
 
 
 for loop in range(url_len):
@@ -91,7 +79,6 @@ for loop in range(url_len):
     page_scrap(product_page_url)
     print("voici les pages ajoutés : " + product_page_url)
 
-
 if len(next_exist) > 0:
     next_balise = str(next_exist[0]).split('">')
     next_split = next_balise[1].split('"')
@@ -101,11 +88,8 @@ if len(next_exist) > 0:
     next_url = '/'.join(next_balise)
     url_category = next_url
     print(url_category)
+    # PB => CA SCRAP LA DERNIERE PAGE
     page_scrap(product_page_url)
 
 
-
-
-
-
-
+print(product_page_url)
