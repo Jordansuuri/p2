@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
-import time
+from time import time
 
 
 url_category = 'http://books.toscrape.com/catalogue/category/books/fiction_10/index.html'
