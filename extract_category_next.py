@@ -9,15 +9,18 @@ def mk_csv():
     with open('info_site.csv', "w") as file:
         file.write("product_page_url;universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
 
-url_category = 'http://books.toscrape.com/catalogue/category/books/childrens_11/index.html'
+
+
+
+url_category = 'http://books.toscrape.com/catalogue/category/books/fiction_10/page-1.html'
 response = requests.get(url_category)
 content = response.content
 soup = BeautifulSoup(content, "html.parser")
 
 def page_scrap(product_page_url):
-    url = product_page_url
+    product_page_url = product_page_url
      # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
-    response = requests.get(url)
+    response = requests.get(product_page_url)
     # Boucle if : si la reponse est bien 200, on peut demander les informations #
     if response.ok:
     # recupération du contenu de l'url en brut #
@@ -48,6 +51,7 @@ def page_scrap(product_page_url):
         img_balise = soup.find('img')
         image_url = img_balise['src'].replace('../..','http://books.toscrape.com')
     # On definit les differentes categories dans le csv & on ecris les differentes variables dans le csv
+
     with open('info_site.csv', "a+") as file:
         file.write(product_page_url + ';')
         file.write(universal_product_code + ';')
@@ -86,10 +90,15 @@ if len(next_exist) > 0:
     next_balise = url_category.split('/')
     next_balise[-1] = next_url
     next_url = '/'.join(next_balise)
-    url_category = next_url
-    print(url_category)
-    # PB => CA SCRAP LA DERNIERE PAGE
+
+
+indice_livre = 0
+for loop in range(url_len):
+    url_product_h3 = soup.select("h3")
+    url_product_href = url_product_h3[indice_livre].find("a")
+    product_page_url = url_product_href['href'].replace('../../..', 'http://books.toscrape.com/catalogue')
+    url_page.append(product_page_url)
     page_scrap(product_page_url)
-
-
-print(product_page_url)
+    indice_livre += 1
+    url_category = next_url
+    print("voici les pages ajoutés : " + product_page_url)
