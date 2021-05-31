@@ -35,6 +35,7 @@ for category_name in category_list:
     category_name_final2 = category_name_final[1].split('/index.html')
     category_name_final3 = category_name_final2[0].split('_')
     category_names.append(category_name_final3[0])
-    print(category_name)
 
-print(category_names)
+
+dict_from_list = dict(zip(category_names, category_links))
+print(dict_from_list)
