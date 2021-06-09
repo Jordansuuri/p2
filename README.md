@@ -1,6 +1,6 @@
 # Programme Projet 2 OpenClassrooms : webscrapping.
 
-__ Bonjour, je vous présente le programme permettant de scrap le site web : books.toscrape.com __
+__Bonjour, je vous présente le programme permettant de scrap le site web : books.toscrape.com__
 
 ## Mise en place de l'environnement virtuel necessaire au programme :
 
