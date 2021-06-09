@@ -4,8 +4,8 @@
 
 # Voici les différentes commandes à utiliser afin d'installer dans l'environnement virtuel les différents packages.
 
-`pip install beautifulsoup4`
-`pip install requests`
+* `pip install beautifulsoup4`
+* `pip install requests`
 
 
 ## Le programme s'articule en 3 éléments distinctes.
