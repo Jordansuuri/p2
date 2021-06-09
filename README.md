@@ -2,15 +2,15 @@
 
 __Bonjour, je vous présente le programme permettant de scrap le site web : books.toscrape.com__
 
-## Mise en place de l'environnement virtuel necessaire au programme :
+# Mise en place de l'environnement virtuel necessaire au programme :
 
-# Voici les différentes commandes à utiliser afin d'installer dans l'environnement virtuel les différents packages.
+## Voici les différentes commandes à utiliser afin d'installer dans l'environnement virtuel les différents packages.
 
 * `pip install beautifulsoup4`
 * `pip install requests`
 
 
-## Le programme s'articule en 3 éléments distinctes.
+# Le programme s'articule en 3 éléments distinctes.
 
 ## Scrap_from_book.py :
 
