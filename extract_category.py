@@ -1,7 +1,4 @@
-from bs4 import BeautifulSoup
-import requests
-import csv
-from time import time
+from extract_category_next import *
 
 url = 'http://books.toscrape.com/index.html'
 
@@ -38,4 +35,10 @@ for category_name in category_list:
 
 
 dict_from_list = dict(zip(category_names, category_links))
-print(dict_from_list)
+
+for nom,url in dict_from_list.items():
+    mk_csv(nom)
+    scrap_category(url,nom)
+
+
+

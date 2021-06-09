@@ -5,19 +5,12 @@ from time import time
 
 
 # CHANGER LE NOM DU FICHIER CSV PAR LE NOM DE LA CATEGORIE => with open (nom_variable_category, 'w')
-def mk_csv():
-    with open('info_site.csv', "w") as file:
+def mk_csv(nom):
+    with open("csv/"+nom+'.csv', "w", encoding="utf-8") as file:
         file.write("product_page_url;universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n")
 
 
-
-
-url_category = 'http://books.toscrape.com/catalogue/category/books/fiction_10/page-1.html'
-response = requests.get(url_category)
-content = response.content
-soup = BeautifulSoup(content, "html.parser")
-
-def page_scrap(product_page_url):
+def page_scrap(product_page_url,nom):
     product_page_url = product_page_url
      # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
     response = requests.get(product_page_url)
@@ -32,7 +25,10 @@ def page_scrap(product_page_url):
     # universal_product_code
         universal_product_code = td_informations[0].text
     # product_description
+    # .replace des point virgules dans la description par des simples virgules
         product_description = soup.find_all('p')[3].text.replace(';',',')
+        if product_description == '' :
+            product_description = "pas de description"
     # price_excluding_tax
         price_excluding_tax = td_informations[2].text.replace('£','')
     # price_including_tax
@@ -50,9 +46,10 @@ def page_scrap(product_page_url):
     #image_url, recupéra via la balise img, puis chercher dans le dictionnaire src
         img_balise = soup.find('img')
         image_url = img_balise['src'].replace('../..','http://books.toscrape.com')
+        dwn_image(image_url)
     # On definit les differentes categories dans le csv & on ecris les differentes variables dans le csv
 
-    with open('info_site.csv', "a+") as file:
+    with open("csv/"+nom+'.csv', "a+", encoding="utf-8") as file:
         file.write(product_page_url + ';')
         file.write(universal_product_code + ';')
         file.write(title + ';')
@@ -65,40 +62,40 @@ def page_scrap(product_page_url):
         file.write(image_url + ';\n')
         file.close
 
+#Extraction des images dans un dossier images
+def dwn_image(url):
+    res = requests.get(url)
+    n = url.split('/')
+    fichier = open("images/"+ n[-1], "wb")
+    fichier.write(res.content)
+    fichier.close()
 
+def scrap_category(url_category,nom = None):
+    response = requests.get(url_category)
+    content = response.content
+    soup = BeautifulSoup(content, "html.parser")
 
-# création d'une condition si le bouton next existe : on créer une nouvelle url (next_url)
-next_exist = soup.find_all(class_="next")
-url_len = len(soup.select("h3"))
-url_page = []
-indice_livre = 0
+    # création d'une condition si le bouton next existe : on créer une nouvelle url (next_url)
+    next_exist = soup.find_all(class_="next")
+    url_len = len(soup.select("h3"))
+    url_page = []
+    indice_livre = 0
 
+    for loop in range(url_len):
+        url_product_h3 = soup.select("h3")
+        url_product_href = url_product_h3[indice_livre].find("a")
+        product_page_url = url_product_href['href'].replace('../../..', 'http://books.toscrape.com/catalogue')
+        url_page.append(product_page_url)
+        indice_livre += 1
+        page_scrap(product_page_url,nom)
+        print("voici les pages ajoutés : " + product_page_url)
 
-for loop in range(url_len):
-    url_product_h3 = soup.select("h3")
-    url_product_href = url_product_h3[indice_livre].find("a")
-    product_page_url = url_product_href['href'].replace('../../..','http://books.toscrape.com/catalogue')
-    url_page.append(product_page_url)
-    indice_livre += 1
-    page_scrap(product_page_url)
-    print("voici les pages ajoutés : " + product_page_url)
+    if len(next_exist) > 0:
+        next_balise = str(next_exist[0]).split('">')
+        next_split = next_balise[1].split('"')
+        next_url = next_split[1]
+        next_balise = url_category.split('/')
+        next_balise[-1] = next_url
+        next_url = '/'.join(next_balise)
+        scrap_category(next_url,nom)
 
-if len(next_exist) > 0:
-    next_balise = str(next_exist[0]).split('">')
-    next_split = next_balise[1].split('"')
-    next_url = next_split[1]
-    next_balise = url_category.split('/')
-    next_balise[-1] = next_url
-    next_url = '/'.join(next_balise)
-
-
-indice_livre = 0
-for loop in range(url_len):
-    url_product_h3 = soup.select("h3")
-    url_product_href = url_product_h3[indice_livre].find("a")
-    product_page_url = url_product_href['href'].replace('../../..', 'http://books.toscrape.com/catalogue')
-    url_page.append(product_page_url)
-    page_scrap(product_page_url)
-    indice_livre += 1
-    url_category = next_url
-    print("voici les pages ajoutés : " + product_page_url)
