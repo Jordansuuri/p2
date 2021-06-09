@@ -15,7 +15,7 @@ est la suivante :
 
 A la même manière de "Scrap_from_book.py", ce dernier permet de scraper une catégorie entière.
 Il faudra donc utiliser la fonction : 
-*scrap_category("url de la categorie","nom du livre")
+* scrap_category("url de la categorie","nom du livre")
 
 *Le comportement en matière d'extraction de csv & de telechargement d'images est similaire a celui de Scrap_from_book.py.*
 
