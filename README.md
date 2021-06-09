@@ -1,4 +1,4 @@
-# Bonjour,
+# Bonjour, je vous présente le programme permettant de scrap le site web : books.toscrape.com
 
 ## Le programme s'articule en 3 éléments distinctes.
 
