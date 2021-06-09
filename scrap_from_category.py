@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import csv
-from time import time
 
 
 # CHANGER LE NOM DU FICHIER CSV PAR LE NOM DE LA CATEGORIE => with open (nom_variable_category, 'w')
@@ -11,7 +9,6 @@ def mk_csv(nom):
 
 
 def page_scrap(product_page_url,nom):
-    product_page_url = product_page_url
      # Créer une variable où on utilise l'url avec la methode "get" du module Request. Si on a une bonne reponse (200): on peut demander la suite #
     response = requests.get(product_page_url)
     # Boucle if : si la reponse est bien 200, on peut demander les informations #
@@ -99,3 +96,5 @@ def scrap_category(url_category,nom = None):
         next_url = '/'.join(next_balise)
         scrap_category(next_url,nom)
 
+
+scrap_category("http://books.toscrape.com/catalogue/category/books/mystery_3/index.html","mystery_3")
